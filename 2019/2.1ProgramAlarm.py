@@ -3,20 +3,22 @@ intCodes[1] = 12
 intCodes[2] = 2
 tups = ()
 list_of_ints = []
-# print(len(intCodes))
+intCodes_used = intCodes
 for i in intCodes:
     tups += (i,)
-    if len(tups) == 4:
+    if len(tups) == 4 or (len(tups) == 1 and i == 99):
         list_of_ints.append(tups)
         tups = ()
 final_list = []
 for t in list_of_ints:
-    if t[0] == 1:
-        intCodes[t[3]] = intCodes[t[1]]+intCodes[t[2]]
-    elif t[0] == 2:
-        intCodes[t[3]] = intCodes[t[1]]*intCodes[t[2]]
-    elif t[0] == 99:
+    if t[0] == 99:
         break
+    elif t[0] == 1:
+        intCodes_used[t[3]] = intCodes[t[1]]+intCodes[t[2]]
+    elif t[0] == 2:
+        intCodes_used[t[3]] = intCodes[t[1]]*intCodes[t[2]]
     else:
         raise ValueError("Value is not 1, 2, or 99")
+    if intCodes_used[t[3]] == 19690720:
+        print(intCodes[t[1]],intCodes[t[2]], t[1],t[2])
 print(intCodes[0])
