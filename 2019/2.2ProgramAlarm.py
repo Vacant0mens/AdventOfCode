@@ -15,17 +15,24 @@ def try_codes(int_code: int, noun: int, verb: int):
     else:
         raise ValueError("Value is not 1, 2, or 99")
 
-tups = ()
-for i in intCodes:
-    tups += (i,)
-    if len(tups) == 4 or (len(tups) == 1 and i == 99):
-        list_of_ints.append(tups)
-        tups = ()
+def update_list():
+    loi = []
+    tups = ()
+    i = 0
+    for j in intCodes:
+        tups += (j,)
+        if len(tups) == 4 or i == len(intCodes):
+            loi.append(tups)
+            tups = ()
+        i += 1
+    return loi
+list_of_ints = update_list()
 
 for t in list_of_ints:
-    if t[0] in [1, 2]:
-        intCodes[t[3]] = try_codes(t[0], t[1], t[2])
-    elif t[0] == 99:
+    returned = try_codes(t[0], t[1], t[2])
+    if returned:
+        intCodes[t[3]] = returned
+    else:
         break
 print("Part1: IntCode 0: ", intCodes[0])
 intCodes = intCodes_permanent
@@ -34,15 +41,17 @@ def gravity_assist():
     for noun in range(0,100):
         for verb in range(0,100):
             intCodes = intCodes_permanent
+            intCodes[1] = noun
+            intCodes[2] = verb
             for t in list_of_ints:
-                returned = try_codes(t[0], noun, verb)
+                returned = try_codes(t[0], t[1], t[2])
                 if returned:
                     intCodes[t[3]] = returned
                 else: 
-                    print("Halt.")
-                    if intCodes[0] == 19690720:
-                        print(intCodes[0])
-                        print(f"Noun: {noun}\nVerb: {verb}\n")
-                        print('Answer: ' + str((100*noun)+verb))
+                    break
+                if intCodes[0] == 19690720:
+                    print(intCodes[0])
+                    print(f"Noun: {noun}\nVerb: {verb}\n")
+                    print('Answer: ' + str((100*noun)+verb))
                     return
 gravity_assist()
